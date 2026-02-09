@@ -4,74 +4,88 @@ import {
   FileText,
   CheckSquare,
   AlertTriangle,
-  Activity,
+  TrendingUp,
   type LucideIcon,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface StatItem {
   label: string;
   value: string;
+  change: string;
+  changeType: "up" | "down" | "neutral";
   icon: LucideIcon;
-  color: string;
-  bg: string;
+  accentColor: string;
+  accentBg: string;
 }
 
 const stats: StatItem[] = [
   {
     label: "Discharges Today",
     value: "42",
+    change: "+8 from yesterday",
+    changeType: "up",
     icon: FileText,
-    color: "text-blue-600",
-    bg: "bg-blue-100",
+    accentColor: "text-[#1e3a5f]",
+    accentBg: "bg-[#1e3a5f]/[0.06]",
   },
   {
     label: "Consents Captured",
     value: "38",
+    change: "90% coverage",
+    changeType: "up",
     icon: CheckSquare,
-    color: "text-emerald-600",
-    bg: "bg-emerald-100",
+    accentColor: "text-emerald-600",
+    accentBg: "bg-emerald-600/[0.06]",
   },
   {
     label: "Audit Alerts",
     value: "5",
+    change: "3 critical",
+    changeType: "down",
     icon: AlertTriangle,
-    color: "text-amber-600",
-    bg: "bg-amber-100",
+    accentColor: "text-amber-600",
+    accentBg: "bg-amber-600/[0.06]",
   },
   {
-    label: "System Status",
-    value: "Online",
-    icon: Activity,
-    color: "text-green-600",
-    bg: "bg-green-100",
+    label: "Avg Risk Score",
+    value: "72",
+    change: "+4 pts this week",
+    changeType: "up",
+    icon: TrendingUp,
+    accentColor: "text-emerald-600",
+    accentBg: "bg-emerald-600/[0.06]",
   },
 ];
 
 export function StatsCards() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {stats.map((stat, idx) => (
-        <Card
+        <div
           key={idx}
-          className="hover:shadow-md transition-shadow cursor-pointer py-4"
+          className="card-instrument p-4 group cursor-default transition-all"
         >
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">
-                  {stat.label}
-                </p>
-                <p className="text-2xl font-bold text-slate-800 mt-1">
-                  {stat.value}
-                </p>
-              </div>
-              <div className={`p-3 rounded-full ${stat.bg} ${stat.color}`}>
-                <stat.icon className="w-6 h-6" />
-              </div>
+          <div className="flex items-start justify-between mb-3">
+            <span className="section-label">{stat.label}</span>
+            <div
+              className={`w-7 h-7 rounded-md ${stat.accentBg} flex items-center justify-center`}
+            >
+              <stat.icon className={`w-3.5 h-3.5 ${stat.accentColor}`} />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-[28px] font-semibold text-[#1a1d23] leading-none tracking-tight">
+            {stat.value}
+          </div>
+          <div
+            className={`mono-readout mt-1.5 ${
+              stat.changeType === "down"
+                ? "text-amber-600"
+                : "text-[#6b7280]"
+            }`}
+          >
+            {stat.change}
+          </div>
+        </div>
       ))}
     </div>
   );

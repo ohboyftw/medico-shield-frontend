@@ -1,8 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { FileText, CheckSquare, RefreshCw } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CheckSquare, RefreshCw, PenTool } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SignatureCanvasProps {
@@ -21,7 +20,7 @@ export function SignatureCanvas({ onSubmit }: SignatureCanvasProps) {
     if (!ctx) return;
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
-    ctx.strokeStyle = "#000000";
+    ctx.strokeStyle = "#1a1d23";
   }, []);
 
   const getCoordinates = useCallback(
@@ -85,61 +84,65 @@ export function SignatureCanvas({ onSubmit }: SignatureCanvasProps) {
   }, []);
 
   return (
-    <div className="flex flex-col h-full">
-      <Card className="flex-grow flex flex-col h-full">
-        <CardHeader className="border-b">
-          <CardTitle className="flex items-center space-x-2 text-[#1e3a5f]">
-            <FileText className="w-5 h-5" />
-            <span>Digital Signature</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col flex-grow">
-          <div
-            className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg flex-grow relative touch-none"
-            style={{ minHeight: "300px" }}
+    <div className="card-instrument flex flex-col h-full">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e2e5ea]">
+        <span className="section-label">Digital Signature</span>
+        <div className="flex items-center gap-1.5">
+          <PenTool className="w-3 h-3 text-[#9ca3af]" />
+          <span className="mono-readout">
+            {hasSignature ? "Signed" : "Awaiting"}
+          </span>
+        </div>
+      </div>
+
+      <div className="p-4 flex flex-col flex-grow">
+        <div
+          className="bg-white border border-dashed border-[#d1d5db] rounded-md flex-grow relative touch-none"
+          style={{ minHeight: "280px" }}
+        >
+          <canvas
+            ref={canvasRef}
+            width={500}
+            height={280}
+            className="w-full h-full absolute inset-0 cursor-crosshair"
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
+          />
+          {!isDrawing && !hasSignature && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <PenTool className="w-5 h-5 text-[#d1d5db] mb-2" />
+              <p className="text-[12px] text-[#9ca3af]">
+                Sign here using mouse or touch
+              </p>
+            </div>
+          )}
+          <button
+            onClick={clearCanvas}
+            className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 text-[10px] font-medium bg-white border border-[#e2e5ea] rounded hover:bg-[#f8f9fb] text-[#6b7280] transition-colors"
           >
-            <canvas
-              ref={canvasRef}
-              width={500}
-              height={300}
-              className="w-full h-full absolute inset-0 cursor-crosshair"
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-            />
-            {!isDrawing && !hasSignature && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
-                <p className="text-slate-400 text-lg">
-                  Sign here using mouse or touch
-                </p>
-              </div>
-            )}
-            <button
-              onClick={clearCanvas}
-              className="absolute top-2 right-2 text-xs bg-white border border-slate-200 px-2 py-1 rounded hover:bg-slate-100 text-slate-600 flex items-center gap-1"
-            >
-              <RefreshCw className="w-3 h-3" />
-              Clear
-            </button>
-          </div>
-          <div className="mt-4 pt-4 border-t border-slate-100">
-            <Button
-              className="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
-              onClick={onSubmit}
-            >
-              <CheckSquare className="w-4 h-4 mr-2" />
-              Capture Consent &amp; Sign
-            </Button>
-            <p className="text-center text-xs text-slate-400 mt-2">
-              By clicking above, you agree to digitally sign this document.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+            <RefreshCw className="w-2.5 h-2.5" />
+            Clear
+          </button>
+        </div>
+
+        <div className="mt-4 pt-3 border-t border-[#f0f2f5]">
+          <Button
+            onClick={onSubmit}
+            className="w-full h-9 text-[12px] font-medium bg-emerald-600 hover:bg-emerald-700"
+          >
+            <CheckSquare className="w-3.5 h-3.5 mr-2" />
+            Capture Consent & Sign
+          </Button>
+          <p className="text-center text-[10px] text-[#9ca3af] mt-2">
+            Legally binding under IT Act 2000 Section 5
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

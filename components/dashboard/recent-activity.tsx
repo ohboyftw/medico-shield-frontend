@@ -1,17 +1,8 @@
 "use client";
 
-import { Clock } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { ArrowRight } from "lucide-react";
 import type { RecentRecord } from "@/types";
 
 const RECENT_RECORDS: RecentRecord[] = [
@@ -49,87 +40,98 @@ const RECENT_RECORDS: RecentRecord[] = [
   },
 ];
 
-function getStatusBadge(status: RecentRecord["status"]) {
-  switch (status) {
-    case "Completed":
-      return (
-        <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-50">
-          {status}
-        </Badge>
-      );
-    case "Audited":
-      return (
-        <Badge className="bg-purple-50 text-purple-700 border border-purple-100 hover:bg-purple-50">
-          {status}
-        </Badge>
-      );
-    case "Draft":
-      return (
-        <Badge className="bg-amber-50 text-amber-700 border border-amber-100 hover:bg-amber-50">
-          {status}
-        </Badge>
-      );
-  }
+function StatusBadge({ status }: { status: RecentRecord["status"] }) {
+  const styles = {
+    Completed: "bg-emerald-50 text-emerald-700 border-emerald-100",
+    Audited: "bg-[#1e3a5f]/[0.06] text-[#1e3a5f] border-[#1e3a5f]/10",
+    Draft: "bg-amber-50 text-amber-700 border-amber-100",
+  };
+
+  return (
+    <Badge
+      variant="outline"
+      className={`text-[10px] font-mono font-medium px-1.5 py-0 h-[18px] ${styles[status]}`}
+    >
+      {status}
+    </Badge>
+  );
 }
 
 export function RecentActivity() {
   return (
-    <Card className="py-0">
-      <CardHeader className="border-b py-4">
-        <CardTitle className="flex items-center space-x-2 text-[#1e3a5f]">
-          <Clock className="w-5 h-5" />
-          <span>Recent Activity</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-slate-50 hover:bg-slate-50">
-              <TableHead className="px-6 py-3 text-slate-500 text-xs uppercase tracking-wider font-medium">
+    <div className="card-instrument overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e2e5ea]">
+        <span className="section-label">Recent Activity</span>
+        <span className="mono-readout">Last 4 hours</span>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="bg-[#f8f9fb]">
+              <th className="text-left px-4 py-2 font-mono text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">
                 UHID
-              </TableHead>
-              <TableHead className="px-6 py-3 text-slate-500 text-xs uppercase tracking-wider font-medium">
+              </th>
+              <th className="text-left px-4 py-2 font-mono text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">
                 Patient
-              </TableHead>
-              <TableHead className="px-6 py-3 text-slate-500 text-xs uppercase tracking-wider font-medium">
+              </th>
+              <th className="text-left px-4 py-2 font-mono text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider hidden md:table-cell">
                 Condition
-              </TableHead>
-              <TableHead className="px-6 py-3 text-slate-500 text-xs uppercase tracking-wider font-medium">
+              </th>
+              <th className="text-left px-4 py-2 font-mono text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider hidden sm:table-cell">
+                Time
+              </th>
+              <th className="text-left px-4 py-2 font-mono text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">
                 Status
-              </TableHead>
-              <TableHead className="px-6 py-3 text-slate-500 text-xs uppercase tracking-wider font-medium text-right">
-                Action
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+              </th>
+              <th className="px-4 py-2" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#f0f2f5]">
             {RECENT_RECORDS.map((record) => (
-              <TableRow
+              <tr
                 key={record.id}
-                className="hover:bg-slate-50 transition-colors"
+                className="hover:bg-[#f8f9fb] transition-colors group"
               >
-                <TableCell className="px-6 py-4 text-xs font-mono text-slate-500">
-                  {record.uhid}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-sm font-medium text-slate-900">
-                  {record.patient}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-sm text-slate-600">
-                  {record.condition}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {getStatusBadge(record.status)}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-right">
-                  <Button variant="ghost" size="sm">
+                <td className="px-4 py-2.5">
+                  <span className="font-mono text-[11px] text-[#6b7280]">
+                    {record.uhid}
+                  </span>
+                </td>
+                <td className="px-4 py-2.5">
+                  <div>
+                    <span className="text-[13px] font-medium text-[#1a1d23]">
+                      {record.patient}
+                    </span>
+                  </div>
+                </td>
+                <td className="px-4 py-2.5 hidden md:table-cell">
+                  <span className="text-[12px] text-[#6b7280]">
+                    {record.condition}
+                  </span>
+                </td>
+                <td className="px-4 py-2.5 hidden sm:table-cell">
+                  <span className="mono-readout">{record.date}</span>
+                </td>
+                <td className="px-4 py-2.5">
+                  <StatusBadge status={record.status} />
+                </td>
+                <td className="px-4 py-2.5 text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-[11px] text-[#6b7280] hover:text-[#1a1d23] opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
                     View
+                    <ArrowRight className="w-3 h-3 ml-1" />
                   </Button>
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

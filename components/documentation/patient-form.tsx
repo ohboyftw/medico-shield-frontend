@@ -1,7 +1,5 @@
 "use client";
 
-import { User } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -23,46 +21,47 @@ const CONDITION_TEMPLATES = [
 
 export function PatientForm() {
   return (
-    <Card>
-      <CardHeader className="border-b">
-        <CardTitle className="flex items-center space-x-2 text-[#1e3a5f]">
-          <User className="w-5 h-5" />
-          <span>Patient &amp; Condition</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <Label className="text-sm font-medium text-slate-700">
-              Patient Name
-            </Label>
-            <Input placeholder="e.g. Rajesh Kumar" />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-sm font-medium text-slate-700">
-              Age/Gender
-            </Label>
-            <Input placeholder="e.g. 45 / Male" />
-          </div>
-          <div className="col-span-2 space-y-1">
-            <Label className="text-sm font-medium text-slate-700">
-              Condition Template
-            </Label>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Condition..." />
-              </SelectTrigger>
-              <SelectContent>
-                {CONDITION_TEMPLATES.map((template) => (
-                  <SelectItem key={template} value={template}>
-                    {template}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="card-instrument p-4">
+      <div className="flex items-center justify-between mb-3">
+        <span className="section-label">Patient & Condition</span>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1">
+          <Label className="text-[11px] font-medium text-[#6b7280]">
+            Patient Name
+          </Label>
+          <Input
+            placeholder="e.g. Rajesh Kumar"
+            className="h-8 text-[13px] bg-[#f8f9fb] border-[#e2e5ea] focus:bg-white"
+          />
         </div>
-      </CardContent>
-    </Card>
+        <div className="space-y-1">
+          <Label className="text-[11px] font-medium text-[#6b7280]">
+            Age / Gender
+          </Label>
+          <Input
+            placeholder="e.g. 45 / Male"
+            className="h-8 text-[13px] bg-[#f8f9fb] border-[#e2e5ea] focus:bg-white"
+          />
+        </div>
+        <div className="col-span-2 space-y-1">
+          <Label className="text-[11px] font-medium text-[#6b7280]">
+            Condition Template
+          </Label>
+          <Select>
+            <SelectTrigger className="h-8 text-[13px] bg-[#f8f9fb] border-[#e2e5ea] focus:bg-white">
+              <SelectValue placeholder="Select condition..." />
+            </SelectTrigger>
+            <SelectContent>
+              {CONDITION_TEMPLATES.map((template) => (
+                <SelectItem key={template} value={template} className="text-[13px]">
+                  {template}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
   );
 }

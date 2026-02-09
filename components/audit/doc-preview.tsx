@@ -1,40 +1,37 @@
 "use client";
 
-import { FileText } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
 export function DocPreview() {
   return (
-    <Card className="h-full">
-      <CardHeader className="border-b">
-        <CardTitle className="flex items-center space-x-2 text-[#1e3a5f]">
-          <FileText className="w-5 h-5" />
-          <span>Current Documentation</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs font-mono text-slate-600 h-96 overflow-y-auto leading-relaxed">
-          PATIENT: MALE/45Y
+    <div className="card-instrument h-full flex flex-col">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e2e5ea]">
+        <span className="section-label">Current Documentation</span>
+        <span className="mono-readout">Source</span>
+      </div>
+      <div className="p-4 flex-grow">
+        <div className="p-3 bg-[#f8f9fb] border border-[#e2e5ea] rounded-md font-mono text-[11px] text-[#4b5563] h-full overflow-y-auto content-scroll leading-[1.7] min-h-[300px]">
+          <span className="text-[#9ca3af]">PATIENT:</span> MALE/45Y
           <br />
-          C/O: ABDOMINAL PAIN
+          <span className="text-[#9ca3af]">C/O:</span> ABDOMINAL PAIN
           <br />
           <br />
-          HISTORY: Pt says pain since last night. Vomited twice. Ate outside
-          food.
+          <span className="text-[#9ca3af]">HISTORY:</span> Pt says pain since
+          last night. Vomited twice. Ate outside food.
           <br />
           <br />
-          EXAM: Soft, mild tenderness in epigastrium. Bowel sounds +.
+          <span className="text-[#9ca3af]">EXAM:</span> Soft, mild tenderness
+          in epigastrium. Bowel sounds +.
           <br />
           <br />
-          TREATMENT: Inj Pan 40, Inj Emset. Oral fluids.
+          <span className="text-[#9ca3af]">TREATMENT:</span> Inj Pan 40, Inj
+          Emset. Oral fluids.
           <br />
           <br />
-          DIAGNOSIS: Gastritis.
+          <span className="text-[#9ca3af]">DIAGNOSIS:</span> Gastritis.
           <br />
           <br />
-          PLAN: Discharge on oral meds.
+          <span className="text-[#9ca3af]">PLAN:</span> Discharge on oral meds.
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
