@@ -1,36 +1,143 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MedicoShield Frontend
+
+Doctor-facing dashboard for AI-powered medical documentation, pre-discharge audit, and consent capture. Built for Indian ER doctors who need information-dense, fast-to-scan interfaces in a medical-legal context.
+
+## Tech Stack
+
+- **Next.js 16** with React 19 and App Router
+- **TailwindCSS v4** with PostCSS plugin
+- **ShadCN/ui** (16 components: sidebar, button, card, badge, input, label, select, checkbox, table, skeleton, alert, separator, sheet, tooltip, avatar, dropdown-menu)
+- **Lucide React** for icons
+- **TypeScript** with strict mode
+- Static export (`output: "export"`) — no SSR
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The dev server uses Turbopack.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To build for production:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+Outputs static files to `out/` — deploy to Vercel, Netlify, or any static host.
 
-To learn more about Next.js, take a look at the following resources:
+## Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | Dashboard | Stats overview, patient search, quick actions, recent activity |
+| `/documentation` | Documentation | Patient form + sparse notes input, AI-augmented discharge summary output |
+| `/audit` | Risk Audit | Pre-discharge documentation gap analysis with risk score ring and findings |
+| `/consent` | Consent | Patient/signatory form, acknowledgments, digital signature canvas |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+app/
+  layout.tsx              # Root layout — fonts (Inter + IBM Plex Mono), metadata
+  globals.css             # Theme tokens, brand colors, custom utilities
+  page.tsx                # Dashboard
+  documentation/page.tsx  # Documentation augmentation
+  audit/page.tsx          # Pre-discharge audit
+  consent/page.tsx        # Consent capture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+components/
+  layout/
+    app-shell.tsx         # SidebarProvider + SidebarInset wrapper (client)
+    app-sidebar.tsx       # Dark instrument-panel sidebar with LED indicators
+    app-header.tsx        # Header with live clock, notifications, status chip
+  dashboard/
+    stats-cards.tsx       # 4 stat cards (discharges, consents, alerts, risk score)
+    patient-search.tsx    # UHID/mobile search
+    quick-actions.tsx     # New Discharge, New Consent, Run Audit
+    recent-activity.tsx   # Activity table with status badges
+  documentation/
+    patient-form.tsx      # Patient name, age/gender, condition template select
+    notes-input.tsx       # Sparse clinical notes textarea with char count
+    augmented-output.tsx  # AI-augmented discharge summary display
+  audit/
+    doc-preview.tsx       # Monospaced documentation preview
+    risk-score.tsx        # SVG ring with dynamic risk score
+    findings-list.tsx     # Severity-grouped findings with legal citations
+  consent/
+    consent-form.tsx      # Patient details, signatory, acknowledgments
+    signature-canvas.tsx  # HTML5 canvas for digital signature (mouse + touch)
+    consent-success.tsx   # Success confirmation with summary
+  ui/                     # ShadCN/ui primitives (do not edit directly)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+types/index.ts            # TypeScript interfaces (Patient, Physician, Audit, Consent)
+lib/api.ts                # API client (base URL from NEXT_PUBLIC_API_URL)
+lib/utils.ts              # cn() utility (clsx + tailwind-merge)
+hooks/use-mobile.ts       # Mobile detection hook
+```
+
+## Design System
+
+**Aesthetic**: "Command Center meets Clinical Instrument" — dense, information-rich, premium feel for a serious medical-legal tool.
+
+### Brand Colors
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| Primary | `#1e3a5f` | Headers, sidebar, primary actions |
+| Secondary | `#2d5a87` | Hover states, focus rings |
+| Success | `#059669` | Consent module, positive states |
+| Warning | `#d97706` | Alerts, LAMA indicators |
+| Error | `#dc2626` | Critical findings, risk indicators |
+| Background | `#f5f7fa` | Page background |
+
+### Typography
+
+- **Sans**: Inter (body text, UI elements)
+- **Mono**: IBM Plex Mono (data readouts, IDs, medical notes)
+
+### Custom CSS Utilities
+
+| Class | Purpose |
+|-------|---------|
+| `.card-instrument` | Content cards with refined borders and hover shadow |
+| `.section-label` | Uppercase 10px label with letter-spacing |
+| `.mono-readout` | Monospaced 11px data display |
+| `.sidebar-panel` | Dark sidebar with radial gradient + noise texture |
+
+### Key UI Patterns
+
+- Dark sidebar with LED-style active indicators (glowing blue bar)
+- Live clock in header with system status chip
+- SVG risk score ring with severity-based coloring on audit page
+- Emerald accent throughout consent module
+- LAMA cases highlighted with amber styling
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api/v1` | Backend API base URL |
+
+## Backend API
+
+The frontend expects a FastAPI backend at the configured API URL with these endpoints:
+
+- `POST /documentation/augment` — Transform sparse notes into augmented documentation
+- `POST /audit/pre-discharge` — Run documentation gap analysis
+- `POST /consent/capture` — Capture digital consent with signature
+- `GET /templates/` — List condition templates
+
+Currently all data is mock/hardcoded in the frontend components. Wire up by replacing mock state with calls to `lib/api.ts`.
+
+## Deployment
+
+Static export deploys to any CDN/static host. For Vercel:
+
+```bash
+npx vercel
+```
+
+The `next.config.ts` is already configured with `output: "export"` and `images.unoptimized: true`.
